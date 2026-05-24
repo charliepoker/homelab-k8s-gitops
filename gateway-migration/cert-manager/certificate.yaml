@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: webdemoapp-tls
+  namespace: envoy-gateway-system
+spec:
+  secretName: webdemoapp-tls
+  duration: 2160h       # 90 days
+  renewBefore: 720h     # Renew 30 days before expiry
+  issuerRef:
+    name: letsencrypt-staging   # Switch to letsencrypt-prod once staging succeeds
+    kind: ClusterIssuer
+  dnsNames:
+    - webdemoapp.com
+    - www.webdemoapp.com
+    - gitea.webdemoapp.com
+    - podinfo.webdemoapp.com
+    - argocd.webdemoapp.com
+    - grafana.webdemoapp.com

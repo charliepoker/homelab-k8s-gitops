@@ -1,0 +1,53 @@
+# ── Secrets — NEVER commit these ──────────────────────────────────────────
+*-secret.yaml
+*secret*.yaml
+*-credentials.yaml
+*credentials*.yaml
+secrets/
+.secrets/
+
+# AWS
+*.csv
+credentials
+.aws/
+
+# SSH & TLS keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# Kubeconfigs
+*.kubeconfig
+kubeconfig
+kubeconfig.*
+*-kubeconfig.yaml
+.kube/
+
+# Environment files with real values
+.env
+.env.*
+*.env
+
+# Vault tokens
+.vault-token
+vault-token
+
+# Temp / local
+*.tmp
+*.temp
+*.backup
+*.log
+.DS_Store
+Thumbs.db
+notes/
+local/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
