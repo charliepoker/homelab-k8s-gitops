@@ -51,3 +51,5 @@ local/
 .idea/
 *.swp
 *.swo
+
+RUNBOOK.sh
