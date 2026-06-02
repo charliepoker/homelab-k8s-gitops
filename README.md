@@ -12,10 +12,10 @@ and watched by ArgoCD for continuous delivery.
 
 | Folder | Project | Status |
 |--------|---------|--------|
-| `gateway-migration/` | Envoy Gateway · cert-manager · TLS · HTTPRoutes | Week 1–2 |
-| `gitops/` | ArgoCD Applications · Argo Rollouts | Week 4–6 |
-| `security/` | Kyverno · Falco · Trivy | Week 7–8 |
-| `observability/` | Prometheus · Loki · Tempo · OTel | Week 5–8 |
+| `gateway-migration/` | Envoy Gateway · cert-manager · TLS · HTTPRoutes |
+| `gitops/` | ArgoCD Applications · Argo Rollouts |
+| `security/` | Kyverno · Falco · Trivy  |
+| `observability/` | Prometheus · Loki · Tempo · OTel |
 
 ---
 
