@@ -1,6 +1,6 @@
 # Gateway Migration — webdemoapp.com
 
-**Week 1, Project 1** — Replacing ingress-nginx with Envoy Gateway.
+**Project 1** — Replacing ingress-nginx with Envoy Gateway.
 TLS via cert-manager + Let's Encrypt DNS-01 challenge against Route 53.
 
 ---
@@ -115,4 +115,4 @@ before applying. Do not commit real values.
 
 ---
 
-*Part of the 8-week homelab DevOps project · webdemoapp.com*
+
