@@ -1,0 +1,41 @@
+# =============================================================================
+# Homelab AppProject  ·  GitOps/apps/homelab-project.yaml
+#
+# Restricts which repos and namespaces the homelab Applications can target.
+# Includes a project-scoped read-only role for the RBAC demo.
+#
+# Apply first:  kubectl apply -f GitOps/apps/homelab-project.yaml
+# Then move all Applications to project: homelab
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: homelab
+  namespace: argocd
+spec:
+  description: Homelab applications — Gitea, Podinfo, and future workloads
+
+  # Only these repos can be used as sources by apps in this project.
+  sourceRepos:
+    - https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git
+    - https://dl.gitea.com/charts/
+    - ghcr.io/stefanprodan/charts
+
+  # Apps can deploy to any namespace on the local cluster.
+  destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+
+  # No cluster-scoped resources allowed (Gitea and Podinfo only use
+  # namespace-scoped resources). Add entries here if a future chart
+  # needs ClusterRoles, CRDs, etc.
+  clusterResourceWhitelist: []
+
+  # Project-scoped read-only role — can view apps but cannot sync or delete.
+  roles:
+    - name: readonly
+      description: Read-only access to homelab apps — no sync, no delete
+      policies:
+        - p, proj:homelab:readonly, applications, get, homelab/*, allow
+        - p, proj:homelab:readonly, applications, list, homelab/*, allow
+        - p, proj:homelab:readonly, logs, get, homelab/*, allow
