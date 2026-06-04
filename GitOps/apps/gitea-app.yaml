@@ -42,8 +42,15 @@ spec:
 
   # Ignore fields that Kubernetes mutates at runtime (StatefulSet status,
   # PVC capacity rounding, etc.) so ArgoCD doesn't show perpetual drift.
-  ignoreDifferences:
+ignoreDifferences:
     - group: apps
       kind: StatefulSet
       jsonPointers:
         - /spec/volumeClaimTemplates/0/status
+        - /metadata/labels/app.kubernetes.io~1managed-by
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /metadata/labels/app.kubernetes.io~1managed-by
+
+        
