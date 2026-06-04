@@ -47,7 +47,8 @@ ignoreDifferences:
       kind: StatefulSet
       jsonPointers:
         - /spec/volumeClaimTemplates/0/status
-        - /metadata/labels/app.kubernetes.io~1managed-by
+        - /spec/volumeClaimTemplates/0/apiVersion
+        - /spec/volumeClaimTemplates/0/kind
     - group: ""
       kind: PersistentVolumeClaim
       jsonPointers:
