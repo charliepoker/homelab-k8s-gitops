@@ -9,7 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/part-of: homelab
 spec:
-  project: default
+  project: homelab
 
   sources:
     - repoURL: https://dl.gitea.com/charts/

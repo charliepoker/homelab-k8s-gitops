@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/part-of: homelab
 spec:
   # Starts in "default"; moves to "homelab" AppProject on Thursday (task 1).
-  project: default
+  project: homelab
 
   sources:
     # --- Source 1: the Helm chart from the upstream registry ---
