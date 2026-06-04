@@ -17,7 +17,7 @@ spec:
       targetRevision: "12.6.0"
       helm:
         valueFiles:
-          - $values/project1/gitea/values.yaml
+          - $values/gateway-migration/gitea/values.yaml
 
     # --- Source 2: values from your Gitea homelab-gitops repo ---
     - repoURL: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git

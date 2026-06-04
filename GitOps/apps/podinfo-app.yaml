@@ -22,7 +22,7 @@ spec:
       helm:
         # Pull values from the Gitea repo (source 2) via the $values ref.
         valueFiles:
-          - $values/project1/podinfo/values.yaml
+          - $values/gateway-migration/podinfo/values.yaml
 
     # --- Source 2: values from your Gitea homelab-gitops repo ---
     # Confirm the URL matches `argocd repo list --grpc-web` (the one you just added).

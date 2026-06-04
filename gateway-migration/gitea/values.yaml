@@ -1,0 +1,52 @@
+# Gitea Helm values — webdemoapp.com homelab
+# Chart: gitea/gitea
+
+
+replicaCount: 1
+
+image:
+  rootless: true
+
+ingress:
+  enabled: false   
+
+service:
+  http:
+    port: 3000
+
+gitea:
+  config:
+    server:
+      ROOT_URL: https://gitea.webdemoapp.com
+      DOMAIN: gitea.webdemoapp.com
+      SSH_DOMAIN: gitea.webdemoapp.com
+    database:
+      DB_TYPE: postgres
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 10Gi
+
+postgresql-ha:
+  enabled: false
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      storageClass: local-path
+      size: 5Gi
+    resources:
+      requests:
+        memory: 128Mi
+      limits:
+        memory: 256Mi
