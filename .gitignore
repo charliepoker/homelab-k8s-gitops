@@ -53,3 +53,5 @@ local/
 *.swo
 
 RUNBOOK.sh
+
+.DS_Store
