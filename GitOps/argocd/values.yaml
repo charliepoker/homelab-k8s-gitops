@@ -1,0 +1,89 @@
+# Argo CD Helm values  
+# Chart: argo/argo-cd (argoproj/argo-helm)
+
+
+global:
+  domain: argocd.webdemoapp.com
+ 
+
+configs:
+
+  params:
+    server.insecure: true
+  cm:
+    url: https://argocd.webdemoapp.com
+    admin.enabled: true
+    exec.enabled: false
+ 
+  rbac:
+    policy.default: role:readonly
+    scopes: "[groups]"
+ 
+
+dex:
+  enabled: false
+ 
+applicationSet:
+  enabled: false
+ 
+notifications:
+  enabled: false
+ 
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+ 
+
+repoServer:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+ 
+# API + UI. Stays ClusterIP — the HTTPRoute targets argocd-server:80.
+server:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  ingress:
+    enabled: false          # routing is via Gateway API HTTPRoute, not Ingress
+  service:
+    type: ClusterIP
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+ 
+# Bundled single-instance Redis (do NOT enable redis-ha on a 3-node Pi cluster).
+redis:
+  enabled: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+ 
+redis-ha:
+  enabled: false
