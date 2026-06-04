@@ -55,3 +55,9 @@ spec:
       kind: PersistentVolumeClaim
       jsonPointers:
             - /metadata/labels/app.kubernetes.io~1managed-by
+    - group: ""
+      kind: Secret
+      name: gitea-postgresql
+      jsonPointers:
+        - /data
+      
