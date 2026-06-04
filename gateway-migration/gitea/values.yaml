@@ -22,6 +22,7 @@ gitea:
       SSH_DOMAIN: gitea.webdemoapp.com
     database:
       DB_TYPE: postgres
+    webhook:
       ALLOWED_HOST_LIST: "private"
 
 resources:
