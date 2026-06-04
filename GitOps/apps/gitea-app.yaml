@@ -40,18 +40,18 @@ spec:
     #   prune: true
     #   selfHeal: true
 
-  # Ignore fields that Kubernetes mutates at runtime (StatefulSet status,
-  # PVC capacity rounding, etc.) so ArgoCD doesn't show perpetual drift.
-ignoreDifferences:
-    - group: apps
-      kind: StatefulSet
-      jsonPointers:
-        - /spec/volumeClaimTemplates/0/status
-        - /spec/volumeClaimTemplates/0/apiVersion
-        - /spec/volumeClaimTemplates/0/kind
-    - group: ""
-      kind: PersistentVolumeClaim
-      jsonPointers:
-        - /metadata/labels/app.kubernetes.io~1managed-by
 
-        
+
+    # Ignore fields that Kubernetes mutates at runtime (StatefulSet status,
+    # PVC capacity rounding, etc.) so ArgoCD doesn't show perpetual drift.
+    ignoreDifferences:
+      - group: apps
+        kind: StatefulSet
+        jsonPointers:
+          - /spec/volumeClaimTemplates/0/status
+          - /spec/volumeClaimTemplates/0/apiVersion
+          - /spec/volumeClaimTemplates/0/kind
+      - group: ""
+        kind: PersistentVolumeClaim
+        jsonPointers:
+          - /metadata/labels/app.kubernetes.io~1managed-by
