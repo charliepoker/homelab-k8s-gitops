@@ -37,5 +37,4 @@ spec:
       description: Read-only access to homelab apps — no sync, no delete
       policies:
         - p, proj:homelab:readonly, applications, get, homelab/*, allow
-        - p, proj:homelab:readonly, applications, list, homelab/*, allow
         - p, proj:homelab:readonly, logs, get, homelab/*, allow
