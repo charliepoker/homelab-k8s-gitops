@@ -2,26 +2,21 @@
 #Chart: podinfo/podinfo
 
 replicaCount: 2
-
 image:
   repository: ghcr.io/charliepoker/podinfo
-  tag: sha-03f9f4bed85233be39b51df886431478839ff7f6
+  tag: sha-3db675e285cf947cd36ecc90c4152fa5e4e77000
   pullPolicy: IfNotPresent
-
 ingress:
-  enabled: false   
-
+  enabled: false
 service:
   enabled: true
   http:
     port: 9898
-  
 podinfo:
   config:
     server:
       ROOT_URL: http://podinfo.webdemoapp.com
       DOMAIN: podinfo.webdemoapp.com
-
 resources:
   limits:
     cpu: 100m
@@ -29,11 +24,10 @@ resources:
   requests:
     cpu: 10m
     memory: 32Mi
-
 topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: "kubernetes.io/hostname"
-    whenUnsatisfiable: DoNotSchedule
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/name: podinfo
+- maxSkew: 1
+  topologyKey: "kubernetes.io/hostname"
+  whenUnsatisfiable: DoNotSchedule
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: podinfo
