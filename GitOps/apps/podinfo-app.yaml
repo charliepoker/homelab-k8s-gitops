@@ -1,34 +1,87 @@
-# ============================================================================================
-# This ArgoCD Application manifest deploys the Podinfo demo app using the official Helm chart.
-# ============================================================================================
+# # ============================================================================================
+# # This ArgoCD Application manifest deploys the Podinfo demo app using the official Helm chart.
+# # ============================================================================================
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: podinfo
+#   namespace: argocd              # Applications always live in the argocd namespace
+#   labels:
+#     app.kubernetes.io/part-of: homelab
+# spec:
+#   # Starts in "default"; moves to "homelab" AppProject on Thursday (task 1).
+#   project: homelab
+
+#   sources:
+#     # --- Source 1: the Helm chart from the upstream registry ---
+#     - repoURL: ghcr.io/stefanprodan/charts
+#       chart: podinfo
+#       # Set this to the version from `helm list -n podinfo` (CHART column).
+#       # Example: if it shows "podinfo-6.7.1", use "6.7.1" here.
+#       targetRevision: "6.12.0"
+#       helm:
+#         # Pull values from the Gitea repo (source 2) via the $values ref.
+#         valueFiles:
+#           - $values/gateway-migration/podinfo/values.yaml
+
+#     # --- Source 2: values from your Gitea homelab-gitops repo ---
+#     # Confirm the URL matches `argocd repo list --grpc-web` (the one you just added).
+#     - repoURL: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git
+#       targetRevision: HEAD
+#       ref: values               # defines the $values prefix used above
+
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: podinfo
+
+#   syncPolicy:
+#     syncOptions:
+#       - CreateNamespace=true
+#     automated:
+#       prune: true
+#       selfHeal: true
+
+
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: podinfo
-  namespace: argocd              # Applications always live in the argocd namespace
+  namespace: argocd
   labels:
     app.kubernetes.io/part-of: homelab
+  annotations:
+    # --- ArgoCD Image Updater: watch GHCR, write the tag back to Gitea ---
+    # Alias "podinfo" -> your GHCR image
+    argocd-image-updater.argoproj.io/image-list: podinfo=ghcr.io/charliepoker/podinfo
+    # sha-<gitsha> tags aren't semver, so order by build time and pick the newest
+    argocd-image-updater.argoproj.io/podinfo.update-strategy: newest-build
+    # Only consider sha-<40hex> tags (ignore "scan", "latest", etc.)
+    argocd-image-updater.argoproj.io/podinfo.allow-tags: regexp:^sha-[0-9a-f]{40}$
+    # The podinfo chart uses image.repository + image.tag (not image.name)
+    argocd-image-updater.argoproj.io/podinfo.helm.image-name: image.repository
+    argocd-image-updater.argoproj.io/podinfo.helm.image-tag: image.tag
+    # Write back to Gitea (declarative), using the git creds secret you create in step 2
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/gitea-image-updater
+    # Write directly into your existing values file (repo-root-relative path)
+    argocd-image-updater.argoproj.io/write-back-target: helmvalues:/gateway-migration/podinfo/values.yaml
+    # MUST disambiguate for multi-source: which repo + branch to commit to
+    argocd-image-updater.argoproj.io/git-repository: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git
+    argocd-image-updater.argoproj.io/git-branch: main   # <-- set to the Gitea repo's actual default branch (main or master)
 spec:
-  # Starts in "default"; moves to "homelab" AppProject on Thursday (task 1).
   project: homelab
 
   sources:
-    # --- Source 1: the Helm chart from the upstream registry ---
     - repoURL: ghcr.io/stefanprodan/charts
       chart: podinfo
-      # Set this to the version from `helm list -n podinfo` (CHART column).
-      # Example: if it shows "podinfo-6.7.1", use "6.7.1" here.
       targetRevision: "6.12.0"
       helm:
-        # Pull values from the Gitea repo (source 2) via the $values ref.
         valueFiles:
           - $values/gateway-migration/podinfo/values.yaml
 
-    # --- Source 2: values from your Gitea homelab-gitops repo ---
-    # Confirm the URL matches `argocd repo list --grpc-web` (the one you just added).
     - repoURL: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git
       targetRevision: HEAD
-      ref: values               # defines the $values prefix used above
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
