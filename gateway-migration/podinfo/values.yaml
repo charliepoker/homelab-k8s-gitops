@@ -4,8 +4,8 @@
 replicaCount: 2
 
 image:
-  repository: ghcr.io/charliepoker/podinfo:sha-dde53070b003baa47ac7ecb8af08b1139e068f77
-  tag: 6.5.4
+  repository: ghcr.io/charliepoker/podinfo
+  tag: sha-dde53070b003baa47ac7ecb8af08b1139e068f77
   pullPolicy: IfNotPresent
 
 ingress:
