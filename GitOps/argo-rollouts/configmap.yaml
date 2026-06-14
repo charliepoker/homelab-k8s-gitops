@@ -1,0 +1,12 @@
+# Argo Rollouts plugin registration: Gateway API traffic router (linux/arm64).
+# The controller downloads this binary at startup and uses it whenever a Rollout
+# references trafficRouting.plugins.argoproj-labs/gatewayAPI.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argo-rollouts-config       
+  namespace: argo-rollouts
+data:
+  trafficRouterPlugins: |-
+    - name: "argoproj-labs/gatewayAPI"
+      location: "https://github.com/argoproj-labs/rollouts-plugin-trafficrouter-gatewayapi/releases/download/v0.11.0/gatewayapi-plugin-linux-arm64"
