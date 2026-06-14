@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: podinfo-rollout
+  namespace: podinfo
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: podinfo
+      app.kubernetes.io/managed-by: argo-rollouts
+  strategy:
+    canary:
+      canaryService: podinfo-canary
+      stableService: podinfo
+      trafficRouting:
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: podinfo
+            namespace: podinfo
+      steps:
+        - setWeight: 10
+        - pause: { duration: 2m }
+        - setWeight: 50
+        - pause: { duration: 2m }
+        - setWeight: 100
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podinfo
+        app.kubernetes.io/managed-by: argo-rollouts
+    spec:
+      containers:
+        - name: podinfo
+          image: ghcr.io/charliepoker/podinfo:sha-3db675e285cf947cd36ecc90c4152fa5e4e77000
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9898
+              protocol: TCP
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests: { cpu: 10m,  memory: 32Mi }
+            limits:   { cpu: 100m, memory: 128Mi }
+          env:
+            - name: PODINFO_UI_COLOR
+              value: "#1f6feb"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: podinfo
+              app.kubernetes.io/managed-by: argo-rollouts

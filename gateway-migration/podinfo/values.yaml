@@ -1,7 +1,7 @@
 #Podinfo Helm Chart values.yaml
 #Chart: podinfo/podinfo
 
-replicaCount: 2
+replicaCount: 0
 image:
   repository: ghcr.io/charliepoker/podinfo
   tag: sha-3db675e285cf947cd36ecc90c4152fa5e4e77000
@@ -9,7 +9,7 @@ image:
 ingress:
   enabled: false
 service:
-  enabled: true
+  enabled: false
   http:
     port: 9898
 podinfo:
