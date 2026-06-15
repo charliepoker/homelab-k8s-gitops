@@ -17,7 +17,7 @@ spec:
       trafficRouting:
         plugins:
           argoproj-labs/gatewayAPI:
-            httpRoute: podinfo
+            httpRoute: podinfo-https 
             namespace: podinfo
       steps:
         - setWeight: 10

@@ -13,7 +13,7 @@ spec:
     path: gateway-migration/podinfo
     directory:
       recurse: false
-      include: '{rollout.yaml,services.yaml}'
+      include: '{rollout.yaml,services.yaml,httproute.yaml}'
   destination:
     server: https://kubernetes.default.svc
     namespace: podinfo
