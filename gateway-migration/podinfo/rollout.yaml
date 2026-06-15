@@ -21,9 +21,9 @@ spec:
             namespace: podinfo
       steps:
         - setWeight: 10
-        - pause: { }
+        - pause: { duration: 2m }
         - setWeight: 50
-        - pause: { }
+        - pause: { duration: 2m }
         - setWeight: 100
   template:
     metadata:
@@ -52,7 +52,7 @@ spec:
             limits:   { cpu: 100m, memory: 128Mi }
           env:
             - name: PODINFO_UI_COLOR
-              value: "#d1d248"
+              value: "#1f6feb"
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
