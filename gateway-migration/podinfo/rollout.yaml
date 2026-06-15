@@ -52,7 +52,7 @@ spec:
             limits:   { cpu: 100m, memory: 128Mi }
           env:
             - name: PODINFO_UI_COLOR
-              value: "#1f6feb"
+              value: "#d73a49"
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
