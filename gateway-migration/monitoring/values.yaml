@@ -1,0 +1,118 @@
+# kube-prometheus-stack Helm values — tuned for 3-node Raspberry Pi 4 cluster
+# All persistence on the 1TB SSD (ssd-local-path StorageClass, worker-1)
+
+# ── Prometheus ──────────────────────────────────────────────────────────
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ssd-local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 15Gi
+    nodeSelector:
+      storage: ssd                        # pins to worker-1
+    # Scrape all ServiceMonitors regardless of label
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+# ── Grafana ─────────────────────────────────────────────────────────────
+grafana:
+  adminPassword: admin                    
+  persistence:
+    enabled: true
+    storageClassName: ssd-local-path
+    size: 5Gi
+  nodeSelector:
+    storage: ssd
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  service:
+    type: ClusterIP                       # exposed via Gateway API HTTPRoute, not NodePort
+  sidecar:
+    dashboards:
+      enabled: true
+    datasources:
+      enabled: true
+
+# ── Alertmanager (lightweight — keep it but constrain) ──────────────────
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 64Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ssd-local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+    nodeSelector:
+      storage: ssd
+
+# ── kube-state-metrics ──────────────────────────────────────────────────
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# ── node-exporter (runs on all 3 nodes as DaemonSet) ────────────────────
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# ── Prometheus Operator ─────────────────────────────────────────────────
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  # Operator watches all namespaces for ServiceMonitors
+  namespaces:
+    releaseNamespace: true
+    additional: []
+
+# ── Components to disable (not needed for Pi homelab) ───────────────────
+# These scrape configs target cloud-provider or in-tree components
+# that don't exist on a kubeadm bare-metal cluster
+kubeEtcd:
+  enabled: true                          # etcd runs on master, worth scraping
+kubeScheduler:
+  enabled: true
+kubeControllerManager:
+  enabled: true
+kubeProxy:
+  enabled: true
