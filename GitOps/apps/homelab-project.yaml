@@ -20,6 +20,7 @@ spec:
     - https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git
     - https://dl.gitea.com/charts/
     - ghcr.io/stefanprodan/charts
+    - https://kyverno.github.io/kyverno/
 
   # Apps can deploy to any namespace on the local cluster.
   destinations:
