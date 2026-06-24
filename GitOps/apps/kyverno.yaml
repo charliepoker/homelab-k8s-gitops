@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: homelab
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  sources:
+    - repoURL: https://kyverno.github.io/kyverno/
+      chart: kyverno
+      targetRevision: 3.8.1     
+      helm:
+        valueFiles:
+          - $values/gateway-migration/kyverno/values.yaml
+    - repoURL: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops
+      targetRevision: main
+      ref: values
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Replace=true                       # required: kubectl annotations exceed CRD limit
+      - ServerSideApply=true
+  ignoreDifferences:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      jsonPointers:
+        - /rules                           # aggregated ClusterRoles are managed by k8s

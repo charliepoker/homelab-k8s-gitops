@@ -1,0 +1,39 @@
+# Kyverno v1.18.1 — Pi-tuned (3-node ARM64 homelab)
+# Defaults run 3 replicas per controller (12 pods total). Cut to 1 each.
+
+admissionController:
+  replicas: 1
+  container:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 384Mi
+
+backgroundController:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+cleanupController:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+reportsController:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
