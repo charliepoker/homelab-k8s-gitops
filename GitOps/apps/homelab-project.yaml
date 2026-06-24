@@ -30,7 +30,13 @@ spec:
   # No cluster-scoped resources allowed (Gitea and Podinfo only use
   # namespace-scoped resources). Add entries here if a future chart
   # needs ClusterRoles, CRDs, etc.
-  clusterResourceWhitelist: []
+  clusterResourceWhitelist:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
 
   # Project-scoped read-only role — can view apps but cannot sync or delete.
   roles:
