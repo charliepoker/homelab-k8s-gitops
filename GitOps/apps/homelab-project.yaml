@@ -21,15 +21,17 @@ spec:
     - https://dl.gitea.com/charts/
     - ghcr.io/stefanprodan/charts
     - https://kyverno.github.io/kyverno/
+    - https://prometheus-community.github.io/helm-charts        # kube-prometheus-stack
+    - https://grafana.github.io/helm-charts                     # Loki, Tempo
+    - https://open-telemetry.github.io/opentelemetry-helm-charts # OTel Collector
+    - https://falcosecurity.github.io/charts
 
   # Apps can deploy to any namespace on the local cluster.
   destinations:
     - namespace: "*"
       server: https://kubernetes.default.svc
 
-  # No cluster-scoped resources allowed (Gitea and Podinfo only use
-  # namespace-scoped resources). Add entries here if a future chart
-  # needs ClusterRoles, CRDs, etc.
+
   clusterResourceWhitelist:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -39,7 +41,13 @@ spec:
       kind: CustomResourceDefinition
     - group: kyverno.io
       kind: ClusterPolicy
-
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+    - group: ""
+      kind: Namespace
+      
   # Project-scoped read-only role — can view apps but cannot sync or delete.
   roles:
     - name: readonly
