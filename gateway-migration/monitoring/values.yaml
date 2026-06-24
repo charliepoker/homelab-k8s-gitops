@@ -104,6 +104,14 @@ prometheusOperator:
   namespaces:
     releaseNamespace: true
     additional: []
+  # Cert secret already exists; disable patch jobs that run as PreSync hooks
+  # on every ArgoCD sync (they cause "resource missing" false errors)
+  admissionWebhooks:
+    patch:
+      enabled: false
+  admissionWebhooks:
+    patch:
+      enabled: false
 
 # ── Components to disable (not needed for Pi homelab) ───────────────────
 # These scrape configs target cloud-provider or in-tree components

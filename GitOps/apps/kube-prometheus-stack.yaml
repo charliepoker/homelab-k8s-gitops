@@ -24,6 +24,7 @@ spec:
     - repoURL: https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
       targetRevision: 86.2.3            
+      
       helm:
         releaseName: kube-prom                   # MUST match existing release
         valueFiles:
@@ -64,3 +65,9 @@ spec:
       kind: Alertmanager
       jsonPointers:
         - /status
+    # Operator adds managed fields to PrometheusRules post-apply
+    - group: monitoring.coreos.com
+      kind: PrometheusRule
+      jsonPointers:
+        - /metadata/annotations
+        - /metadata/labels
