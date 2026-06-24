@@ -71,3 +71,15 @@ spec:
       jsonPointers:
         - /metadata/annotations
         - /metadata/labels
+    # Operator mutates ServiceMonitor metadata post-apply
+    - group: monitoring.coreos.com
+      kind: ServiceMonitor
+      jsonPointers:
+        - /metadata/annotations
+        - /metadata/labels
+    # Operator mutates Prometheus spec fields post-apply
+    - group: monitoring.coreos.com
+      kind: Prometheus
+      jsonPointers:
+        - /status
+        - /spec/replicas
