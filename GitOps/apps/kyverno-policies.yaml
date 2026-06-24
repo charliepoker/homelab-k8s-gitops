@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops
     targetRevision: main
-    path: gateway-migration/kyverno-policies
+    path: gateway-migration/kyverno/kyverno-policies
   syncPolicy:
     automated:
       prune: true
