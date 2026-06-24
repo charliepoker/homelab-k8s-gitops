@@ -37,3 +37,5 @@ spec:
       kind: CustomResourceDefinition
       jsonPointers:
         - /metadata/labels                 # k8s adds empty labels map, helm omits it
+        - /metadata/annotations            # k8s adds last-applied annotation
+        - /status                          # k8s populates status after apply
