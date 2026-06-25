@@ -13,9 +13,9 @@ and watched by ArgoCD for continuous delivery.
 | Folder | Project | Status |
 |--------|---------|--------|
 | `gateway-migration/` | Envoy Gateway · cert-manager · TLS · HTTPRoutes |  ✅  |
-| `gitops/` | ArgoCD Applications · Argo Rollouts |
+| `gitops/` | ArgoCD Applications · Argo Rollouts |  ✅  |
 | `security/` | Kyverno · Falco · Trivy  |
-| `observability/` | Prometheus · Loki · Tempo · OTel |
+| `observability/` | Prometheus · Grafana · Loki · Tempo · OTel | ✅ |
 
 ---
 
@@ -31,4 +31,3 @@ and watched by ArgoCD for continuous delivery.
 ---
 
 
-# webhook test
