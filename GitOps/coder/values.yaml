@@ -1,0 +1,46 @@
+coder:
+  # Environment variables for the Coder server (also passed to the workspace
+  # provisioner). Do NOT set CODER_HTTP_ADDRESS / CODER_TLS_* — the chart owns
+  # those, and TLS is terminated upstream at your Envoy Gateway.
+  env:
+    - name: CODER_PG_CONNECTION_URL
+      valueFrom:
+        secretKeyRef:
+          # Create this secret yourself (see below). Format:
+          # postgres://coder:password@<host>:5432/coder?sslmode=disable
+          name: coder-db-url
+          key: url
+
+    - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
+      value: "false"
+
+    # REQUIRED for a real deployment. Public URL the Gateway serves. Scheme is
+    # https because the Gateway terminates TLS — Coder itself listens on HTTP.
+    - name: CODER_ACCESS_URL
+      value: "https://coder.webdemoapp.com"
+
+    # Needed for per-workspace apps (code-server / VS Code web, web terminal,
+    # port-forwarding). Leave COMMENTED until you've done all three:
+    #   1. *.coder.webdemoapp.com A record → 10.0.0.231 in Route 53
+    #   2. *.coder.webdemoapp.com added as a SAN on your homelab-tls cert
+    #   3. an HTTPS route for the wildcard host bound to the Gateway
+    # - name: CODER_WILDCARD_ACCESS_URL
+    #   value: "*.coder.webdemoapp.com"
+
+    # Optional: trust Envoy's forwarded headers so Coder logs real client IPs
+    # rather than the Envoy pod IP. Origin = your Flannel pod CIDR (adjust).
+    # - name: CODER_PROXY_TRUSTED_HEADERS
+    #   value: "X-Forwarded-For"
+    # - name: CODER_PROXY_TRUSTED_ORIGINS
+    #   value: "10.244.0.0/16"
+
+  # Envoy Gateway handles ingress via HTTPRoute, so expose Coder as ClusterIP
+  # (same as ArgoCD/Grafana), not the chart default LoadBalancer.
+  service:
+    type: ClusterIP
+
+  # TLS terminated at the Gateway (webdemoapp-tls). Coder serves plain HTTP
+  # inside the cluster — leave this commented.
+  #tls:
+  #  secretNames:
+  #    - my-tls-secret-name

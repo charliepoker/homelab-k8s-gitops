@@ -1,0 +1,39 @@
+# =============================================================================
+# Deploys Coder (self-service dev workspaces) via the official Helm OCI chart.
+# =============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: coder
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: homelab
+spec:
+  project: homelab
+
+  sources:
+    # --- Source 1: Coder Helm chart (OCI registry) ---
+    - repoURL: ghcr.io/coder/chart
+      chart: coder
+      targetRevision: "2.34.0"          # pin your chosen mainline/stable
+      helm:
+        valueFiles:
+          # This path is into the GITEA repo (source 2), so it uses Gitea's
+          # lowercase convention — must match where you commit values there.
+          - $values/project2/coder/values.yaml
+
+    # --- Source 2: values from your Gitea homelab-gitops repo ---
+    - repoURL: https://gitea.webdemoapp.com/homelab-devops/homelab-gitops.git
+      targetRevision: HEAD
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: coder
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,45 @@
+# Exposes the Coder server at https://coder.webdemoapp.com
+# TLS is terminated at homelab-gateway (webdemoapp-tls cert, coder SAN).
+
+# ---- Route 1: redirect plain HTTP to HTTPS ---------------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: coder-redirect
+  namespace: coder
+spec:
+  parentRefs:
+    - name: homelab-gateway
+      namespace: envoy-gateway-system
+      sectionName: http          # the port-80 listener
+  hostnames:
+    - coder.webdemoapp.com
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+
+---
+# ---- Route 2: HTTPS traffic to the coder service ---------------------------
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: coder
+  namespace: coder
+spec:
+  parentRefs:
+    - name: homelab-gateway
+      namespace: envoy-gateway-system
+      sectionName: https         # the port-443 listener (terminates webdemoapp-tls)
+  hostnames:
+    - coder.webdemoapp.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: coder
+          port: 80
