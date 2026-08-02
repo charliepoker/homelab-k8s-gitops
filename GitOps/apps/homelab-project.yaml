@@ -25,6 +25,7 @@ spec:
     - https://grafana.github.io/helm-charts                     # Loki, Tempo
     - https://open-telemetry.github.io/opentelemetry-helm-charts # OTel Collector
     - https://falcosecurity.github.io/charts
+    - ghcr.io/coder/chart                                       # Coder workspaces
 
   # Apps can deploy to any namespace on the local cluster.
   destinations:
